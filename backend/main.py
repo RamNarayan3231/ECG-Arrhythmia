@@ -1,6 +1,8 @@
 """
 FastAPI application for ECG Arrhythmia Classification
 """
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 from fastapi import FastAPI, HTTPException, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -27,6 +29,19 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc"
 )
+
+# Serve React static files
+
+# This serves JS/CSS from /static/...
+# Serve everything in backend/static at the root URL
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
+
+
+# This serves the main React HTML at "/"
+@app.get("/")
+def read_index():
+    return FileResponse("static/index.html")
+
 
 app.add_middleware(
     CORSMiddleware,

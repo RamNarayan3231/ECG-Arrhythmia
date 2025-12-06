@@ -6,7 +6,7 @@ data/
 # 👉 Ignore node modules and build/cache files
 frontend/node_modules/
 frontend/.cache/
-frontend/dist/
+frontend/build/
 frontend/.next/
 
 # 👉 General junk

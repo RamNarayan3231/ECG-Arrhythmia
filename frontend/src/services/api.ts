@@ -1,15 +1,26 @@
 import { ECGPrediction, TestSamplesResponse, BatchPredictionResponse } from '../types';
 
+// const getApiUrl = (): string => {
+//     const host = window.location.hostname;
+//     const port = 8000;
+//     return `http://${host}:${port}`;
+//     // const API_BASE = process.env.REACT_APP_API_URL || 
+//     //              `${window.location.protocol}//${window.location.hostname}:8000`;
+//     // return API_BASE;
+// };
 const getApiUrl = (): string => {
-    const host = window.location.hostname;
-    const port = 8000;
-    return `http://${host}:${port}`;
-    // const API_BASE = process.env.REACT_APP_API_URL || 
-    //              `${window.location.protocol}//${window.location.hostname}:8000`;
-    // return API_BASE;
+  // When running locally with `npm start`
+  if (window.location.hostname === 'localhost') {
+    return 'http://localhost:8000';
+  }
+
+  // In production (Render) use the same origin as the page
+  return window.location.origin;
 };
 
 const API_BASE = getApiUrl();
+
+// const API_BASE = getApiUrl();
 
 export const api = {
     getTestSamples: async (count: number = 5): Promise<TestSamplesResponse> => {

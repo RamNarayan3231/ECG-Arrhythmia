@@ -1,0 +1,17 @@
+# 👉 Ignore large data files
+data/
+*.npy
+*.csv
+
+# 👉 Ignore node modules and build/cache files
+frontend/node_modules/
+frontend/.cache/
+frontend/dist/
+frontend/.next/
+
+# 👉 General junk
+.DS_Store
+*.log
+.env
+.env.local
+.env.development.local

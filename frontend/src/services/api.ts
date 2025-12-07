@@ -8,15 +8,29 @@ import { ECGPrediction, TestSamplesResponse, BatchPredictionResponse } from '../
 //     //              `${window.location.protocol}//${window.location.hostname}:8000`;
 //     // return API_BASE;
 // };
+// const getApiUrl = (): string => {
+//   // When running locally with `npm start`
+//   if (window.location.hostname === 'localhost') {
+//     return 'http://localhost:8000';
+//   }
+
+
+//   // In production (Render) use the same origin as the page
+//   return window.location.origin;
+// };
+
 const getApiUrl = (): string => {
-  // When running locally with `npm start`
-  if (window.location.hostname === 'localhost') {
+  const host = window.location.hostname;
+
+  // Local dev: use backend on :8000
+  if (host === 'localhost' || host === '127.0.0.1') {
     return 'http://localhost:8000';
   }
 
-  // In production (Render) use the same origin as the page
+  // Production (Render): same origin as frontend
   return window.location.origin;
 };
+
 
 const API_BASE = getApiUrl();
 

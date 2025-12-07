@@ -17,7 +17,14 @@ import random
 from pathlib import Path
 import os
 
-DATA_PATH = Path(os.getenv('DATA_PATH', './data'))
+# DATA_PATH = Path(os.getenv('DATA_PATH', './data'))
+
+# from pathlib import Path
+
+# Go one level up to the project root and then into /data
+BASE_DIR = Path(__file__).resolve().parent.parent
+DATA_PATH = Path(os.getenv('DATA_PATH', BASE_DIR / 'data'))
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -33,8 +40,8 @@ app = FastAPI(
 # Serve React static files
 
 # This serves JS/CSS from /static/...
-# Serve everything in backend/static at the root URL
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+# # Serve everything in backend/static at the root URL
+# app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 
 # This serves the main React HTML at "/"
@@ -242,6 +249,10 @@ async def get_test_samples(count: int = 5):
         import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
+
+
+# --- React frontend (must be last so it doesn't override API routes) ---
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
 
 # ================== EXCEPTION HANDLER ==================

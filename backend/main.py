@@ -7,6 +7,7 @@ from fastapi.responses import FileResponse
 from fastapi import FastAPI, HTTPException, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.staticfiles import StaticFiles
 from models import ECGSignal, PredictionResponse, HealthResponse
 from inference import load_model, predict_ecg, is_model_loaded, scaler
 import logging
@@ -22,8 +23,8 @@ import os
 # from pathlib import Path
 
 # Go one level up to the project root and then into /data
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_PATH = Path(os.getenv('DATA_PATH', BASE_DIR / 'data'))
+BASE_DIR = Path(__file__).resolve().parent
+DATA_PATH = Path(os.getenv('DATA_PATH', BASE_DIR.parent / 'data'))
 
 
 logging.basicConfig(level=logging.INFO)
@@ -43,20 +44,25 @@ app = FastAPI(
 # # Serve everything in backend/static at the root URL
 # app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
+# CORS configuration
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+        "https://ecg-arrhythmia.onrender.com",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # This serves the main React HTML at "/"
 @app.get("/")
 def read_index():
     return FileResponse("static/index.html")
 
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001", "*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # ================== STARTUP ==================
 
@@ -268,3 +274,7 @@ async def general_exception_handler(request, exc):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True, log_level="info")
+
+
+
+# Deployed with updated CORS and API base URL
